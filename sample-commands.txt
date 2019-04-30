@@ -1,0 +1,37 @@
+=Commands====
+
+==Battle Navigation===
+@battlebot start battle
+@battlebot end battle
+
+==Battle Startup===
+@battlebot roll in [player pointer] [number]
+@battlebot remove [player pointer]
+@battlebot first up
+
+==Turn Navigation===
+@battlebot done
+@battlebot next
+@battlebot skip [player pointer] //skip the current player
+
+@battlebot whose turn is it?
+@battlebot who is up?
+@battlebot who
+@battlebot turn
+
+@battlebot list
+@battlebot order
+
+==Initiative Modification===
+@battlebot add 3 initiative
+@battlebot up 3 initiative
+
+@battlebot remove 3 initiative
+@battlebot subtract 3 initiative
+@battlebot down 3 initiative
+
+@battlebot set 3 initiative
+
+...for me //default
+...for @player
+...for $name //NPC
