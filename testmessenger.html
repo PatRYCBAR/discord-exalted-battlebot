@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p>Sample messaging program.</p>
+
+<input id="sentmessage" value="Type here" />
+
+<button onclick="sendMessage()">Send</button>
+
+<p id="humanmessage"></p>
+
+<p id="botmessage"></p>
+
+<script>
+// for https://www.w3schools.com/js/tryit.asp?filename=tryjs_comparison
+
+function sendMessage() {
+  var sentmessage = document.getElementById("sentmessage").value;
+  
+  //posts what was just sent
+  document.getElementById("humanmessage").innerHTML = "<b>Human:</b></br>" + sentmessage;
+  
+  
+  //posts the robot's response
+  document.getElementById("botmessage").innerHTML = "<b>Battle Bot:</b></br>" + toBot(sentmessage);
+}
+
+function toBot(message) {
+  var test = 0;
+  return "I am a Discord bot.  I heard you say: " + message;
+}
+</script>
+
+</body>
+</html>
