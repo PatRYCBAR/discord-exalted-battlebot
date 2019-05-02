@@ -23,12 +23,12 @@ var initiative_list = []; // full list of people in combat
 // Functions
 // ======================
 
-// test function
+// Test function
 function myFunction(p1, p2) {
   return p1 * p2;
 }
 
-// for wiping the Initiative list at the end of battle
+// For wiping the Initiative list at the end of battle
 function wipeInitiative() {
   initiative_list = [];
   return 0;
@@ -41,7 +41,9 @@ function addNewCharacter(newuser, newcharacter, newinitiative) {
   // user - the Discord user running the character
   // character - the IC identity of the character (defaults to the "user")
   // initiative - the character's Initiative value
-  return 0;
+  
+  // returns the newly added character as an object
+  return initiative_list[initiative_list.length - 1];
 }
 
 // Takes in the name of the character and returns the index in the Initiative List and -1 if it isn't found
@@ -53,6 +55,15 @@ function findCharacter(charactername) {
   }
   return list_index;
 }
+
+// WORKING ON: Take in an array of character objects and re-orders it based on the initiative values
+// https://www.w3schools.com/js/js_array_sort.asp (The Compare Function)
+// function(a, b){return b.initiative - a.initiative} <== goal is from highest to lowest
+
+// WORKING ON: Take in an index number.  Only reorders full "initiative_list" after that index number based on initiative values of characters.
+// https://www.w3schools.com/js/js_array_methods.asp
+//  - initiative_list.slice(start_index) <== pass to reorder method
+//  - initiative_list = initiative_list.slice(0, start_index).concat(resulting_array) <== assign back to original
 
 // ======================
 // Event Handlers
