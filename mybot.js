@@ -3,7 +3,7 @@ const client = new Discord.Client();
 const config = require("./config.json");
  
 client.on("ready", () => {
-  console.log("I am ready!");
+  console.log("I just rebooted!  I think I might have an upgrade!");
 });
 
 // ======================
