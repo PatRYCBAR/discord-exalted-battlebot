@@ -65,6 +65,16 @@ function findCombatant(combatantname) {
 //  - initiative_list.slice(start_index) <== pass to reorder method
 //  - initiative_list = initiative_list.slice(0, start_index).concat(resulting_array) <== assign back to original
 
+// WORKING ON: Take in the message.  Returns array of commands and arguments.  Condenses human text that does the same thing into a single a single command.
+//  - const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
+//  - const command = args.shift().toLowerCase();
+
+// WORKING ON: Takes in a name of a combatant and removes them from the Initiative List
+//  - Opposite of "addNewCombatant(newuser, newcombatant, newinitiative)"
+//  - findCombatant(combatantname)
+
+// WORKING ON: Returns string with the full Initiative List for message display
+
 // ======================
 // Event Handlers
 // ======================
