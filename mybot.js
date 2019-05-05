@@ -74,6 +74,15 @@ function findCombatant(combatantname) {
 // Returns array of commands and arguments.
 //  - const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
 //  - const command = args.shift().toLowerCase();
+// First commands:
+//  - battle close
+//  - combatant add [user] [combatant] [number]
+//  - combatant remove [combatant]
+//  - battle list simple
+//  - battle list full
+//  - combatant initiative add [combatant] [number]
+//  - combatant initiative remove [combatant] [number]
+//  - combatant initiative set [combatant] [number]
 
 // WORKING ON: Removes a combatant from the Initiative List.
 // Takes in a name of a combatant to be removed.
