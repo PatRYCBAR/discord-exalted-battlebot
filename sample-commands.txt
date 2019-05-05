@@ -30,11 +30,14 @@ battle first
 
 @battlebot list
 @battlebot order
+... full
+... all // same as full
 
 ===Robot Commands==
 battle next
 battle current
-battle list
+battle list simple
+battle list full
 
 ==Initiative Modification===
 @battlebot add 3 initiative
