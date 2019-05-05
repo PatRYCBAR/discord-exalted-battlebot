@@ -56,24 +56,34 @@ function findCombatant(combatantname) {
   return list_index;
 }
 
-// WORKING ON: Take in an array of combatant objects and re-orders it based on the initiative values
+// WORKING ON: Sorts array of combatant objects based on Initiative values.
+// Take in an array of combatant objects.
+// Returns that same array but sorted.
 // https://www.w3schools.com/js/js_array_sort.asp (The Compare Function)
 // function(a, b){return b.initiative - a.initiative} <== goal is from highest to lowest
 
-// WORKING ON: Take in an index number.  Only reorders full "initiative_list" after that index number based on initiative values of combatants.
+// WORKING ON: Reorders full "initiative_list" after a specified index number based on initiative values of combatants.
+// Take in an index number.  
+// Returns nothing - directly modifies "initiative_list".
 // https://www.w3schools.com/js/js_array_methods.asp
 //  - initiative_list.slice(start_index) <== pass to reorder method
 //  - initiative_list = initiative_list.slice(0, start_index).concat(resulting_array) <== assign back to original
 
-// WORKING ON: Take in the message.  Returns array of commands and arguments.  Condenses human text that does the same thing into a single a single command.
+// WORKING ON: Translates human text / aliases into more usable commands and arguments.
+// Take in the message and the user that sent the message.
+// Returns array of commands and arguments.
 //  - const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
 //  - const command = args.shift().toLowerCase();
 
-// WORKING ON: Takes in a name of a combatant and removes them from the Initiative List
+// WORKING ON: Removes a combatant from the Initiative List.
+// Takes in a name of a combatant to be removed.
+// Returns nothing - directly modifies "initiative_list".
 //  - Opposite of "addNewCombatant(newuser, newcombatant, newinitiative)"
 //  - findCombatant(combatantname)
 
 // WORKING ON: Returns string with the full Initiative List for message display
+// Takes in nothing.
+// Returns formatted string of "initiative_list".
 
 // ======================
 // Event Handlers
