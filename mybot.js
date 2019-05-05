@@ -91,7 +91,7 @@ function findCombatant(combatantname) {
 //  - findCombatant(combatantname)
 
 // WORKING ON: Returns string with the full Initiative List for message display
-// Takes in nothing.
+// Takes in boolean to determine if it will be the default display or "full display".
 // Returns formatted string of "initiative_list".
 
 // ======================
