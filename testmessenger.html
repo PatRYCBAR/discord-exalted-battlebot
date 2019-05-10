@@ -15,26 +15,39 @@
 <script>
 // for https://www.w3schools.com/js/tryit.asp?filename=tryjs_comparison
 
-function sendMessage() {
-  var sentmessage = document.getElementById("sentmessage").value;
-  
-  //posts what was just sent
-  document.getElementById("humanmessage").innerHTML = "<b>Human:</b></br>" + sentmessage;
-  
-  
-  //posts the robot's response
-  document.getElementById("botmessage").innerHTML = "<b>Battle Bot:</b></br>" + toBot(sentmessage);
+var message;
+
+// ================================================
+// !!!!! Replace with Variables and functions !!!!!
+// ================================================
+
+function newMessage(text) {
+  message = {
+    content : text,
+    channel : {
+      send  : function(outboundtext) {
+        document.getElementById("botmessage").innerHTML = "<b>Battle Bot:</b></br>" + outboundtext;
+      }
+    }
+  };
 }
 
-function toBot(message) {
-  // output variable
-  var output = "";
+function sendMessage() {
+  newMessage(document.getElementById("sentmessage").value);
   
+  //posts what was just sent
+  document.getElementById("humanmessage").innerHTML = "<b>Human:</b></br>" + message.content;
+  
+  //posts the robot's response
+  toBot(message.content);
+  
+}
+
+function toBot(messagein) {
   // sample output
-  output = "I am a Discord bot.  I heard you say: " + message;
+  message.channel.send("I am a Discord bot.  I heard you say: " + messagein);
   
-  // send output
-  return output;
+  return 0;
 }
 </script>
 
