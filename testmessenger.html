@@ -11,7 +11,7 @@
 <p id="messagehistory"></p>
 
 <script>
-//for https://www.w3schools.com/js/tryit.asp?filename=tryjs_comparison
+//RUN IN: https://www.w3schools.com/js/tryit.asp?filename=tryjs_comparison
 
 var message;
 var messagehistory = [];
@@ -42,6 +42,9 @@ function printMessageHistory(){
 function newMessage(text) {
   message = {
     content : text,
+    author  : {
+      bot   : false
+    },
     channel : {
       send  : function(outboundtext) {
         //document.getElementById("botmessage").innerHTML = "<b>Battle Bot:</b></br>" + outboundtext;
