@@ -83,6 +83,17 @@ function findCombatant(combatantname) {
 //  - combatant initiative add [combatant] [number]
 //  - combatant initiative remove [combatant] [number]
 //  - combatant initiative set [combatant] [number]
+function parseCommands(messagetext) {
+  var args = message.content.slice(prefix.length).trim().split(/ +/g);
+  var command = args.shift().toLowerCase();
+  command = command + " " + args.shift().toLowerCase();
+  
+  for (i = 0; i < initiative_list.length; ++i){
+    if(initiative_list[i] == combatantname) list_index = i;
+  }
+  
+  return args.unshift(command);
+}
 
 // WORKING ON: Removes a combatant from the Initiative List.
 // Takes in a name of a combatant to be removed.
@@ -101,17 +112,17 @@ function findCombatant(combatantname) {
 client.on("message", (message) => {
   if (message.author.bot) return;
   if (message.content.indexOf(config.prefix) !== 0) return;
+  
+  const args = parseCommands(message.content); 
+  const command = args.shift();
  
-  const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
-  const command = args.shift().toLowerCase();
- 
-  if(command === 'ping') {
+  if(command === 'ping 0') {
     message.channel.send('Pong!');
   } else
-  if(command === 'foo') {
+  if(command === 'foo 0') {
     message.channel.send('Bar!');
   } else
-  if (command === 'blah') {
+  if (command === 'blah 0') {
     message.channel.send('Meh.');
   }
 });
