@@ -84,15 +84,19 @@ function findCombatant(combatantname) {
 //  - combatant initiative remove [combatant] [number]
 //  - combatant initiative set [combatant] [number]
 function parseCommands(messagetext) {
-  var args = message.content.slice(prefix.length).trim().split(/ +/g);
-  var command = args.shift().toLowerCase();
-  command = command + " " + args.shift().toLowerCase();
+  var args = messagetext.slice(prefix.length).trim().split(/ +/g);
+  var command = "";
+  if(args.length > 0) command = args.shift().toLowerCase();
+  if(args.length > 0) command = command + " " + args.shift().toLowerCase();
   
-  for (i = 0; i < initiative_list.length; ++i){
+  /*for (i = 0; i < initiative_list.length; ++i){
     if(initiative_list[i] == combatantname) list_index = i;
-  }
+  }*/ // what is this?
   
-  return args.unshift(command);
+  //format output
+  args.unshift(command)
+ 
+  return args;
 }
 
 // WORKING ON: Removes a combatant from the Initiative List.
@@ -109,9 +113,11 @@ function parseCommands(messagetext) {
 // Event Handlers
 // ======================
 
+// REFERED TO AS "MAIN METHOD"
 client.on("message", (message) => {
   if (message.author.bot) return;
-  if (message.content.indexOf(config.prefix) !== 0) return;
+  // if (message.content.indexOf(config.prefix) !== 0) return; // For once there's an actual config file
+  if (message.content.indexOf(prefix) !== 0) return;
   
   const args = parseCommands(message.content); 
   const command = args.shift();
@@ -124,6 +130,8 @@ client.on("message", (message) => {
   } else
   if (command === 'blah 0') {
     message.channel.send('Meh.');
+  } else {
+    message.channel.send('Command not recognized.');
   }
 });
  
