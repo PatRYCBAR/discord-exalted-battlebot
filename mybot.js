@@ -23,11 +23,6 @@ var initiative_list = []; // full list of people in combat
 // Functions
 // ======================
 
-// Test function
-function myFunction(p1, p2) {
-  return p1 * p2;
-}
-
 // For wiping the Initiative list at the end of battle
 function wipeInitiative() {
   initiative_list = [];
@@ -51,7 +46,7 @@ function findCombatant(combatantname) {
   var list_index = -1;
   var i;
   for (i = 0; i < initiative_list.length; ++i){
-    if(initiative_list[i] == combatantname) list_index = i;
+    if(initiative_list[i].combatant == combatantname) list_index = i;
   }
   return list_index;
 }
@@ -108,6 +103,25 @@ function parseCommands(messagetext) {
 // WORKING ON: Returns string with the full Initiative List for message display
 // Takes in boolean to determine if it will be the default display or "full display".
 // Returns formatted string of "initiative_list".
+function printInitiative(full) {
+  var output = "";
+  if (initiative_list.length == 0) output = "-empty-";
+  
+  for (i = 0; i < initiative_list.length; ++i){
+    if (full) output = output + initiative_list[i].initiative + " : " + initiative_list[i].combatant + " (" + initiative_list[i].user + ")";
+    if (!full) {
+      output = output + initiative_list[i].initiative + " : ";
+      if (initiative_list[i].combatant === '@user') {
+        output = output + initiative_list[i].user;
+      } else {
+        output = output + initiative_list[i].combatant + " (" + initiative_list[i].user + ")";
+      }
+    }
+    if (i != initiative_list.length - 1) output = output + "</br>";
+  }
+  
+  return output;
+}
 
 // ======================
 // Event Handlers
@@ -121,15 +135,49 @@ client.on("message", (message) => {
   
   const args = parseCommands(message.content); 
   const command = args.shift();
- 
-  if(command === 'ping 0') {
+  
+  // Process commands
+  // First commands:
+  //  - battle close
+  //  - combatant add [user] [combatant] [number]
+  //  - combatant remove [combatant]
+  //  - battle list simple
+  //  - battle list full
+  //  - combatant initiative add [combatant] [number]
+  //  - combatant initiative remove [combatant] [number]
+  //  - combatant initiative set [combatant] [number]
+  if(command === 'battle close') {
+    message.channel.send('battle closing!');
+    wipeInitiative();
+    message.channel.send('battle closed!');
+  } else
+  if(command === 'combatant add') {
+    message.channel.send('adding combatant!');
+    addNewCombatant(args[0], args[1], args[2]);
+    message.channel.send('combatant added!');
+  } else
+  if(command === 'combatant remove') {
+    message.channel.send('removing combatant!');
+  } else
+  if(command === 'battle list') {
+    message.channel.send('here comes the initiative');
+    if (args[0] === 'simple') {
+      message.channel.send(printInitiative(false));
+    } else
+    if (args[0] === 'full') {
+      message.channel.send(printInitiative(true));
+    } else {
+      message.channel.send(printInitiative(false));
+    }
+  } else
+  if(command === 'combatant initiative') {
     message.channel.send('Pong!');
   } else
-  if(command === 'foo 0') {
-    message.channel.send('Bar!');
+  if(command === 'ping') {
+    message.channel.send('Pong!');
   } else
-  if (command === 'blah 0') {
-    message.channel.send('Meh.');
+  if (command === 'blah') {
+    message.channel.send('meh.');
   } else {
     message.channel.send('Command not recognized.');
   }
