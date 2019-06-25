@@ -69,6 +69,9 @@ function sortByInitiative(combatantlist) {
 // https://www.w3schools.com/js/js_array_methods.asp
 //  - initiative_list.slice(start_index) <== pass to reorder method
 //  - initiative_list = initiative_list.slice(0, start_index).concat(resulting_array) <== assign back to original
+function sortInitiativeList(start_index) {
+  initiative_list = initiative_list.slice(0, start_index).concat(sortByInitiative(initiative_list.slice(start_index)));
+}
 
 // WORKING ON: Translates human text / aliases into more usable commands and arguments.
 // Take in the message and the user that sent the message.
@@ -160,8 +163,8 @@ client.on("message", (message) => {
     message.channel.send('battle closed!');
   } else
   if(command === 'combatant add') {
-    message.channel.send('adding combatant!');
-    addNewCombatant(args[0], args[1], args[2]);
+    //message.channel.send('adding combatant!');
+    addNewCombatant(args[0], args[1], parseInt(args[2]));
     message.channel.send('combatant added!');
   } else
   if(command === 'combatant remove') {
@@ -184,11 +187,42 @@ client.on("message", (message) => {
   } else
   if(command === 'battle sort') {
     message.channel.send('Sorting battle!');
-    initiative_list = sortByInitiative(initiative_list);
+    
+    // Preparing first argument to be used
+    if (args.length == 0) args.push("0");
+    args[0] = parseInt(args[0]);
+    if (args[0].toString() == "NaN") args[0] = 0;
+    
+    // Sorting from specified position
+    sortInitiativeList(args[0]);
     message.channel.send('Battle sorted!');
   } else
   if(command === 'help') {
-    message.channel.send('<b>You could try</b></br>@battlebot battle close</br>@battlebot combatant add Elwin @user 7</br>@battlebot combatant add Zashi @user 13</br>@battlebot combatant add ST Peplos 8</br>@battlebot combatant add Nadia @user 11</br>@battlebot battle list</br>@battlebot battle sort</br>');
+    message.channel.send('<b>You could try:</b>' + '</br>'
+                         + '@battlebot battle close' + '</br>'
+                         + '@battlebot combatant add Elwin @user 7' + '</br>'
+                         + '@battlebot combatant add Zashi @user 13' + '</br>'
+                         + '@battlebot combatant add ST Peplos 8' + '</br>'
+                         + '@battlebot combatant add ST Big_Bad 20' + '</br>'
+                         + '@battlebot combatant add Nadia @user 11' + '</br>'
+                         + '@battlebot battle list' + '</br>'
+                         + '@battlebot battle sort');
+  } else
+  if(command === 'sample') {
+    message.channel.send('<b>Setting-up sample as though the following commands were run:</b>' + '</br>'
+                         + '@battlebot battle close' + '</br>'
+                         + '@battlebot combatant add Elwin @user 7' + '</br>'
+                         + '@battlebot combatant add Zashi @user 13' + '</br>'
+                         + '@battlebot combatant add ST Peplos 8' + '</br>'
+                         + '@battlebot combatant add ST Big_Bad 20' + '</br>'
+                         + '@battlebot combatant add Nadia @user 11');
+    wipeInitiative();
+    addNewCombatant("Elwin", "@user", 7);
+    addNewCombatant("Zashi", "@user", 13);
+    addNewCombatant("ST", "Peplos", 8);
+    addNewCombatant("ST", "Big_Bad", 20);
+    addNewCombatant("Nadia", "@user", 11);
+    message.channel.send('Sample setup completed!');
   } else
   if(command === 'ping') {
     message.channel.send('Pong!');
@@ -196,7 +230,7 @@ client.on("message", (message) => {
   if (command === 'blah') {
     message.channel.send('meh.');
   } else {
-    message.channel.send('Command not recognized.');
+    message.channel.send('Command not recognized. Try:</br>@battlebot help');
   }
 });
  
