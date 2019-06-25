@@ -78,6 +78,7 @@ function findCombatant(combatantname) {
 //  - combatant initiative add [combatant] [number]
 //  - combatant initiative remove [combatant] [number]
 //  - combatant initiative set [combatant] [number]
+//  - battle sort [number]
 function parseCommands(messagetext) {
   var args = messagetext.slice(prefix.length).trim().split(/ +/g);
   var command = "";
@@ -146,6 +147,7 @@ client.on("message", (message) => {
   //  - combatant initiative add [combatant] [number]
   //  - combatant initiative remove [combatant] [number]
   //  - combatant initiative set [combatant] [number]
+  //  - battle sort [number]
   if(command === 'battle close') {
     message.channel.send('battle closing!');
     wipeInitiative();
@@ -171,7 +173,12 @@ client.on("message", (message) => {
     }
   } else
   if(command === 'combatant initiative') {
-    message.channel.send('Pong!');
+    message.channel.send('Changing initiative!');
+    message.channel.send('Initiative changed!');
+  } else
+  if(command === 'battle sort') {
+    message.channel.send('Sorting battle!');
+    message.channel.send('Battle sorted!');
   } else
   if(command === 'ping') {
     message.channel.send('Pong!');
