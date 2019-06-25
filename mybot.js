@@ -56,6 +56,12 @@ function findCombatant(combatantname) {
 // Returns that same array but sorted.
 // https://www.w3schools.com/js/js_array_sort.asp (The Compare Function)
 // function(a, b){return b.initiative - a.initiative} <== goal is from highest to lowest
+function sortByInitiative(combatantlist) {
+  // function(a, b){return b.initiative - a.initiative} <== goal is from highest to lowest
+  combatantlist.sort(function(a, b){return b.initiative - a.initiative});
+  
+  return combatantlist;
+}
 
 // WORKING ON: Reorders full "initiative_list" after a specified index number based on initiative values of combatants.
 // Take in an index number.  
@@ -178,7 +184,11 @@ client.on("message", (message) => {
   } else
   if(command === 'battle sort') {
     message.channel.send('Sorting battle!');
+    initiative_list = sortByInitiative(initiative_list);
     message.channel.send('Battle sorted!');
+  } else
+  if(command === 'help') {
+    message.channel.send('<b>You could try</b></br>@battlebot battle close</br>@battlebot combatant add Elwin @user 7</br>@battlebot combatant add Zashi @user 13</br>@battlebot combatant add ST Peplos 8</br>@battlebot combatant add Nadia @user 11</br>@battlebot battle list</br>@battlebot battle sort</br>');
   } else
   if(command === 'ping') {
     message.channel.send('Pong!');
@@ -191,3 +201,4 @@ client.on("message", (message) => {
 });
  
 client.login(config.token);
+//
