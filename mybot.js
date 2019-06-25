@@ -45,8 +45,14 @@ function addNewCombatant(newuser, newcombatant, newinitiative) {
 function findCombatant(combatantname) {
   var list_index = -1;
   var i;
+  var namecheck = "";
   for (i = 0; i < initiative_list.length; ++i){
-    if(initiative_list[i].combatant == combatantname) list_index = i;
+    namecheck = initiative_list[i].combatant;
+    
+    // Compensating for if the combatant is just going by the user's name
+    if (namecheck == "@user") namecheck = initiative_list[i].user;
+    
+    if (namecheck == combatantname) list_index = i;
   }
   return list_index;
 }
