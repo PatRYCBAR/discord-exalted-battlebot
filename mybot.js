@@ -174,7 +174,7 @@ client.on("message", (message) => {
     message.channel.send('combatant added!');
   } else
   if(command === 'combatant remove') {
-    message.channel.send('removing combatant' + args[0] + '!');
+    message.channel.send('removing combatant: ' + args[0] + '!');
     
     // find the index of the character to be removed
     var i = findCombatant(args[0]);
@@ -197,8 +197,31 @@ client.on("message", (message) => {
     }
   } else
   if(command === 'combatant initiative') {
-    message.channel.send('Changing initiative!');
-    message.channel.send('Initiative changed!');
+    message.channel.send('changing initiative for: ' + args[1] + '!');
+    
+    // find the index of the combatant to have their initiative changed
+    var i = findCombatant(args[1]);
+    
+    // check that the combatant was found
+    if (i != -1){
+      // make sure that the arg was a number
+      var init_change = parseInt(args[2]);
+      if (init_change.toString() != "NaN"){
+        // select the right modification type to the combatant's initiative
+        if (args[0] == "add"){
+          initiative_list[i].initiative = initiative_list[i].initiative + init_change;
+          message.channel.send('initiative change SUCCESSFUL!');
+        } else
+        if ((args[0] == "remove") || (args[0] == "subtract") || (args[0] == "sub")){
+          initiative_list[i].initiative = initiative_list[i].initiative - init_change;
+          message.channel.send('initiative change SUCCESSFUL!');
+        } else
+        if (args[0] == "set"){
+          initiative_list[i].initiative = init_change;
+          message.channel.send('initiative change SUCCESSFUL!');
+        } else message.channel.send('initiative change FAILED because ' + args[0] + ' is not a valid argument.')
+      } else message.channel.send('initiative change FAILED because ' + args[2] + ' is not a number.');
+    } else message.channel.send('initiative change FAILED because of failure to identify combatant');
   } else
   if(command === 'battle sort') {
     message.channel.send('Sorting battle!');
@@ -221,7 +244,10 @@ client.on("message", (message) => {
                          + '@battlebot combatant add ST Big_Bad 20' + '</br>'
                          + '@battlebot combatant add Nadia @user 11' + '</br>'
                          + '@battlebot battle list' + '</br>'
-                         + '@battlebot battle sort');
+                         + '@battlebot battle sort' + '</br>'
+                         + '@battlebot combatant initiative add Nadia 7' + '</br>'
+                         + '@battlebot combatant initiative sub Big_Bad 6' + '</br>'
+                         + '@battlebot combatant initiative set Elwin 3');
   } else
   if(command === 'sample') {
     message.channel.send('<b>Setting-up sample as though the following commands were run:</b>' + '</br>'
