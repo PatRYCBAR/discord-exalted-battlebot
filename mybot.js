@@ -110,15 +110,53 @@ function parseCommands(messagetext) {
   return args;
 }
 
-// WORKING ON: Removes a combatant from the Initiative List.
-// Takes in a name of a combatant to be removed.
-// Returns nothing - directly modifies "initiative_list".
-//  - Opposite of "addNewCombatant(newuser, newcombatant, newinitiative)"
-//  - findCombatant(combatantname)
+// Summary: Removes a combatant from the Initiative List.
+// Input / Changes: Takes in a name of a combatant to be removed.  Directly modifies "initiative_list".
+// Returns: Combatant that was removed or -1 (if not found)
+function removeCombatant(combatantname){
+  var output = -1;
+  
+  // find the index of the combatant to be removed
+  var i = findCombatant(combatantname);
+  
+  // remove the combatant (if they were found)
+  if (i != -1){
+    output = initiative_list.splice(i, 1);
+    output = output[0];
+  }
+  
+  return output;
+}
 
-// WORKING ON: Returns string with the full Initiative List for message display
-// Takes in boolean to determine if it will be the default display or "full display".
-// Returns formatted string of "initiative_list".
+// Summary: Modifies the Initivative value of a combatant by a multiplier then an addition / subtraction.
+// Input / Changes: Takes in:
+//                     - a name of a combatant to be modified
+//                     - what the Initiative value will be multiplied by (typically 1 to add or subtract or 0 to set)
+//                     - what will be added to the Initative value (negative numbers to subtact)
+//                  Directly modifies "initiative_list".
+// Returns: Combatant that was modified or -1 (if not found)
+function changeCombatantInitiative(combatantname, multInitiative, addToInitiative){
+  var output = -1;
+  
+  // find the index of the combatant to be changed
+  var i = findCombatant(combatantname);
+  
+  // change the combatant (if they were found)
+  if (i != -1){
+    var newInitiative = initiative_list[i].initiative;
+    newInitiative = newInitiative * multInitiative;
+    newInitiative = newInitiative + addToInitiative;
+    
+    initiative_list[i].initiative = newInitiative;
+    output = initiative_list[i];
+  }
+  
+  return output;
+}
+
+// Summary: Returns string with the full Initiative List for message display
+// Input / Changes: Takes in boolean to determine if it will be the default display or "full display".
+// Returns: formatted string of "initiative_list".
 function printInitiative(full) {
   var output = "";
   if (initiative_list.length == 0) output = "-empty-";
@@ -137,6 +175,24 @@ function printInitiative(full) {
   }
   
   return output;
+}
+
+// Summary: Initiates program to provide helpful information and stores old help version that might be useful in the future.
+// Input / Changes: Takes in the version of help desired.
+// Returns: nothing (the method takes input / sends information directly)
+function helpMode(version){
+  if (version == 1) message.channel.send('<b>You could try:</b>' + '</br>'
+                         + '@battlebot battle close' + '</br>'
+                         + '@battlebot combatant add Elwin @user 7' + '</br>'
+                         + '@battlebot combatant add Zashi @user 13' + '</br>'
+                         + '@battlebot combatant add ST Peplos 8' + '</br>'
+                         + '@battlebot combatant add ST Big_Bad 20' + '</br>'
+                         + '@battlebot combatant add Nadia @user 11' + '</br>'
+                         + '@battlebot battle list' + '</br>'
+                         + '@battlebot battle sort' + '</br>'
+                         + '@battlebot combatant initiative add Nadia 7' + '</br>'
+                         + '@battlebot combatant initiative sub Big_Bad 6' + '</br>'
+                         + '@battlebot combatant initiative set Elwin 3');
 }
 
 // ======================
@@ -177,12 +233,9 @@ client.on("message", (message) => {
     message.channel.send('removing combatant: ' + args[0] + '!');
     
     // find the index of the character to be removed
-    var i = findCombatant(args[0]);
+    var removed = removeCombatant(args[0]);
     
-    // remove the character (if they were found)
-    if (i != -1) initiative_list.splice(i, 1);
-    
-    if (i != -1) message.channel.send('combatant removal SUCCESSFUL!');
+    if (removed != -1) message.channel.send('combatant removal SUCCESSFUL! ' + removed.combatant + ' (' + removed.user + ')');
     else message.channel.send('combatant removal FAILED!');
   } else
   if(command === 'battle list') {
@@ -199,29 +252,24 @@ client.on("message", (message) => {
   if(command === 'combatant initiative') {
     message.channel.send('changing initiative for: ' + args[1] + '!');
     
-    // find the index of the combatant to have their initiative changed
-    var i = findCombatant(args[1]);
+    var modified = -1;
     
-    // check that the combatant was found
-    if (i != -1){
-      // make sure that the arg was a number
-      var init_change = parseInt(args[2]);
-      if (init_change.toString() != "NaN"){
-        // select the right modification type to the combatant's initiative
-        if (args[0] == "add"){
-          initiative_list[i].initiative = initiative_list[i].initiative + init_change;
-          message.channel.send('initiative change SUCCESSFUL!');
-        } else
-        if ((args[0] == "remove") || (args[0] == "subtract") || (args[0] == "sub")){
-          initiative_list[i].initiative = initiative_list[i].initiative - init_change;
-          message.channel.send('initiative change SUCCESSFUL!');
-        } else
-        if (args[0] == "set"){
-          initiative_list[i].initiative = init_change;
-          message.channel.send('initiative change SUCCESSFUL!');
-        } else message.channel.send('initiative change FAILED because ' + args[0] + ' is not a valid argument.')
-      } else message.channel.send('initiative change FAILED because ' + args[2] + ' is not a number.');
-    } else message.channel.send('initiative change FAILED because of failure to identify combatant');
+    // make sure that the arg was a number
+    var init_change = parseInt(args[2]);
+    if (init_change.toString() != "NaN"){
+      if (args[0] == "add"){
+        modified = changeCombatantInitiative(args[1], 1, init_change);
+      } else
+      if ((args[0] == "remove") || (args[0] == "subtract") || (args[0] == "sub")){
+        modified = changeCombatantInitiative(args[1], 1, (-1 * init_change));
+      } else
+      if (args[0] == "set"){
+        modified = changeCombatantInitiative(args[1], 0, init_change);
+      } else message.channel.send('initiative change FAILED because ' + args[0] + ' is not a valid sub-command.')
+    } else message.channel.send('initiative change FAILED because ' + args[2] + ' is not a number.');
+    
+    if (modified != -1) message.channel.send('combatant initiative change SUCCESSFUL! ' + modified.initiative + ' : ' + modified.combatant + ' (' + modified.user + ')');
+    else message.channel.send('initiative change FAILED because character was not found!');
   } else
   if(command === 'battle sort') {
     message.channel.send('Sorting battle!');
@@ -236,18 +284,7 @@ client.on("message", (message) => {
     message.channel.send('Battle sorted!');
   } else
   if(command === 'help') {
-    message.channel.send('<b>You could try:</b>' + '</br>'
-                         + '@battlebot battle close' + '</br>'
-                         + '@battlebot combatant add Elwin @user 7' + '</br>'
-                         + '@battlebot combatant add Zashi @user 13' + '</br>'
-                         + '@battlebot combatant add ST Peplos 8' + '</br>'
-                         + '@battlebot combatant add ST Big_Bad 20' + '</br>'
-                         + '@battlebot combatant add Nadia @user 11' + '</br>'
-                         + '@battlebot battle list' + '</br>'
-                         + '@battlebot battle sort' + '</br>'
-                         + '@battlebot combatant initiative add Nadia 7' + '</br>'
-                         + '@battlebot combatant initiative sub Big_Bad 6' + '</br>'
-                         + '@battlebot combatant initiative set Elwin 3');
+    helpMode(1);
   } else
   if(command === 'sample') {
     message.channel.send('<b>Setting-up sample as though the following commands were run:</b>' + '</br>'
