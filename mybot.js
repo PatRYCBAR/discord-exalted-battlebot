@@ -174,7 +174,16 @@ client.on("message", (message) => {
     message.channel.send('combatant added!');
   } else
   if(command === 'combatant remove') {
-    message.channel.send('removing combatant!');
+    message.channel.send('removing combatant' + args[0] + '!');
+    
+    // find the index of the character to be removed
+    var i = findCombatant(args[0]);
+    
+    // remove the character (if they were found)
+    if (i != -1) initiative_list.splice(i, 1);
+    
+    if (i != -1) message.channel.send('combatant removal SUCCESSFUL!');
+    else message.channel.send('combatant removal FAILED!');
   } else
   if(command === 'battle list') {
     message.channel.send('here comes the initiative');
