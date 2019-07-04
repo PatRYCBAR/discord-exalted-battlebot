@@ -12,6 +12,7 @@ client.on("ready", () => {
 
 const prefix = "@battlebot"; // Set the prefix
 var battle_progress_state = 0; // Not in use just yet
+var DebugLevel = 2;
 
 var initiative_list = []; // full list of people in combat
 // The list is an array of objects containing the following:
@@ -195,6 +196,17 @@ function helpMode(version){
                          + '@battlebot combatant initiative set Elwin 3');
 }
 
+// Summary: Sends appropriate output during an appropriate level of debug.
+// Input / Changes: Takes in:
+//                         - a number that indicates the "level" of debug at which point the output would be sent
+//                         - a boolean value or expression to indicate when the output would be sent
+//                         - a string that would be output
+//                  Utilizes global variable that states the current variable that the program is up to
+// Returns: nothing (outputs the information to the console directly)
+function DEBUG(atThisLevel, whenThisHappens, sayThis){
+  if ((DebugLevel >= atThisLevel) && (whenThisHappens)) message.channel.send(sayThis);
+}
+
 // ======================
 // Event Handlers
 // ======================
@@ -220,26 +232,26 @@ client.on("message", (message) => {
   //  - combatant initiative set [combatant] [number]
   //  - battle sort [number]
   if(command === 'battle close') {
-    message.channel.send('battle closing!');
+    DEBUG(3,true,'battle closing!');
     wipeInitiative();
-    message.channel.send('battle closed!');
+    DEBUG(1,true,'battle closed!');
   } else
   if(command === 'combatant add') {
-    //message.channel.send('adding combatant!');
+    DEBUG(3,true,'adding combatant!');
     addNewCombatant(args[0], args[1], parseInt(args[2]));
-    message.channel.send('combatant added!');
+    DEBUG(1,true,'combatant added!');
   } else
   if(command === 'combatant remove') {
-    message.channel.send('removing combatant: ' + args[0] + '!');
+    DEBUG(1,true,'removing combatant: ' + args[0] + '!');
     
     // find the index of the character to be removed
     var removed = removeCombatant(args[0]);
     
-    if (removed != -1) message.channel.send('combatant removal SUCCESSFUL! ' + removed.combatant + ' (' + removed.user + ')');
-    else message.channel.send('combatant removal FAILED!');
+    DEBUG(2,(removed != -1),'combatant removal SUCCESSFUL! ' + removed.combatant + ' (' + removed.user + ')');
+    DEBUG(2,(removed == -1),'combatant removal FAILED!');
   } else
   if(command === 'battle list') {
-    message.channel.send('here comes the initiative');
+    DEBUG(2,true,'here comes the initiative');
     if (args[0] === 'simple') {
       message.channel.send(printInitiative(false));
     } else
@@ -250,7 +262,7 @@ client.on("message", (message) => {
     }
   } else
   if(command === 'combatant initiative') {
-    message.channel.send('changing initiative for: ' + args[1] + '!');
+    DEBUG(2,true,'changing initiative for: ' + args[1] + '!');
     
     var modified = -1;
     
@@ -265,14 +277,14 @@ client.on("message", (message) => {
       } else
       if (args[0] == "set"){
         modified = changeCombatantInitiative(args[1], 0, init_change);
-      } else message.channel.send('initiative change FAILED because ' + args[0] + ' is not a valid sub-command.')
-    } else message.channel.send('initiative change FAILED because ' + args[2] + ' is not a number.');
+      } else DEBUG(2,true,'initiative change FAILED because ' + args[0] + ' is not a valid sub-command.');
+    } else DEBUG(2,true,'initiative change FAILED because ' + args[2] + ' is not a number.');
     
-    if (modified != -1) message.channel.send('combatant initiative change SUCCESSFUL! ' + modified.initiative + ' : ' + modified.combatant + ' (' + modified.user + ')');
-    else message.channel.send('initiative change FAILED because character was not found!');
+    DEBUG(1,(modified != -1),'combatant initiative change SUCCESSFUL! ' + modified.initiative + ' : ' + modified.combatant + ' (' + modified.user + ')');
+    DEBUG(1,(modified == -1),'initiative change FAILED because character was not found!');
   } else
   if(command === 'battle sort') {
-    message.channel.send('Sorting battle!');
+    DEBUG(2,true,'Sorting battle!');
     
     // Preparing first argument to be used
     if (args.length == 0) args.push("0");
@@ -281,13 +293,13 @@ client.on("message", (message) => {
     
     // Sorting from specified position
     sortInitiativeList(args[0]);
-    message.channel.send('Battle sorted!');
+    DEBUG(1,true,'Battle sorted!');
   } else
   if(command === 'help') {
     helpMode(1);
   } else
   if(command === 'sample') {
-    message.channel.send('<b>Setting-up sample as though the following commands were run:</b>' + '</br>'
+    DEBUG(2,true,'<b>Setting-up sample as though the following commands were run:</b>' + '</br>'
                          + '@battlebot battle close' + '</br>'
                          + '@battlebot combatant add Elwin @user 7' + '</br>'
                          + '@battlebot combatant add Zashi @user 13' + '</br>'
@@ -300,7 +312,7 @@ client.on("message", (message) => {
     addNewCombatant("ST", "Peplos", 8);
     addNewCombatant("ST", "Big_Bad", 20);
     addNewCombatant("Nadia", "@user", 11);
-    message.channel.send('Sample setup completed!');
+    DEBUG(1,true,'Sample setup completed!');
   } else
   if(command === 'ping') {
     message.channel.send('Pong!');
