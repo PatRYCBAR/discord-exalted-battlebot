@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p>Sample messaging program.</p>
+
+<input id="sentmessage" value="@battlebot " />
+
+<button onclick="sendMessage()">Send</button>
+
+<p id="messagehistory"></p>
+
+<script>
+//RUN IN: https://www.w3schools.com/js/tryit.asp?filename=tryjs_comparison
+
+var message;
+var messagehistory = [];
+
+function addToMessageHistory(newsender, newmessage){
+  messagehistory.push( {
+    sender  : newsender,
+    message : newmessage
+  } );
+  
+  return messagehistory[messagehistory.length - 1];
+}
+
+function messageHistoryToString(){
+  var output = "";
+  for(var i = messagehistory.length - 1; i >= 0 ; --i){
+    if (i != messagehistory.length - 1) output = output + "<hr>";
+    output = output + "<b>" + messagehistory[i].sender + ":</b></br>" + messagehistory[i].message;
+  }
+  
+  return output;
+}
+
+function printMessageHistory(){
+  document.getElementById("messagehistory").innerHTML = messageHistoryToString();
+}
+
+function newMessage(text) {
+  message = {
+    content : text,
+    author  : {
+      bot   : false
+    },
+    channel : {
+      send  : function(outboundtext) {
+        //document.getElementById("botmessage").innerHTML = "<b>Battle Bot:</b></br>" + outboundtext;
+        addToMessageHistory("BattleBot", outboundtext);
+        printMessageHistory();
+      }
+    }
+  };
+}
+
+// ================================================
+// !!!!! Replace with Variables and functions !!!!!
+// ================================================
+
+function sendMessage() {
+  newMessage(document.getElementById("sentmessage").value);
+  addToMessageHistory("Human", message.content);
+  printMessageHistory();
+  
+  //posts what was just sent
+  //document.getElementById("humanmessage").innerHTML = "<b>Human:</b></br>" + message.content;
+  
+  //posts the robot's response
+  startBot();
+}
+
+function startBot() {
+  // ========================================================================================
+  // !!!!! Replace with contents of this function with innards of 'client.on("message"' !!!!!
+  // ========================================================================================
+  // sample output
+  message.channel.send("I am a Discord bot.  I heard you say: " + message.content);
+}
+</script>
+
+</body>
+</html>

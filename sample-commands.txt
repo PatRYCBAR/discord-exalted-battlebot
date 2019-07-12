@@ -4,10 +4,19 @@
 @battlebot start battle
 @battlebot end battle
 
+===Robot Commands==
+battle new
+battle close
+
 ==Battle Startup===
 @battlebot roll in [player pointer] [number]
 @battlebot remove [player pointer]
 @battlebot first up
+
+===Robot Commands==
+combatant add [user] [combatant] [number]
+combatant remove [combatant]
+battle first
 
 ==Turn Navigation===
 @battlebot done
@@ -21,6 +30,14 @@
 
 @battlebot list
 @battlebot order
+... full
+... all // same as full
+
+===Robot Commands==
+battle next
+battle current
+battle list simple
+battle list full
 
 ==Initiative Modification===
 @battlebot add 3 initiative
@@ -35,3 +52,8 @@
 ...for me //default
 ...for @player
 ...for $name //NPC
+
+===Robot Commands==
+combatant initiative add [combatant] [number]
+combatant initiative remove [combatant] [number]
+combatant initiative set [combatant] [number]
