@@ -20,6 +20,30 @@ var initiative_list = []; // full list of people in combat
 // combatant - the IC identity of the combatant (defaults to the "user")
 // initiative - the combatant's Initiative value
 
+// Reference codes for commands:
+//  - battle close
+//  - combatant add
+//  - combatant remove
+//  - battle list
+//  - combatant initiative
+//  - battle sort
+var CMD_seed = 0;
+const CMD = {
+  bad_command           : -1,
+  battle_close          : ++CMD_seed,
+  combatant_add         : ++CMD_seed,
+  combatant_remove      : ++CMD_seed,
+  battle_list           : ++CMD_seed,
+  combatant_initiative  : ++CMD_seed,
+  battle_sort           : ++CMD_seed,
+  help                  : ++CMD_seed,
+  
+  // nonsense / testing commands
+  CMD_list              : ++CMD_seed,
+  ping                  : ++CMD_seed,
+  blah                  : ++CMD_seed
+}
+
 // ======================
 // Functions
 // ======================
@@ -182,6 +206,7 @@ function printInitiative(full) {
 // Input / Changes: Takes in the version of help desired.
 // Returns: nothing (the method takes input / sends information directly)
 function helpMode(version){
+  // original help version - a bunch of commands
   if (version == 1) message.channel.send('<b>You could try:</b>' + '</br>'
                          + '@battlebot battle close' + '</br>'
                          + '@battlebot combatant add Elwin @user 7' + '</br>'
@@ -194,6 +219,19 @@ function helpMode(version){
                          + '@battlebot combatant initiative add Nadia 7' + '</br>'
                          + '@battlebot combatant initiative sub Big_Bad 6' + '</br>'
                          + '@battlebot combatant initiative set Elwin 3');
+  // not so much a help as a debug of all the potential commands and their numberical equivalents
+  else if (version == -1) message.channel.send("<b>List of CMD IDs:</b>" + "</br>" +
+                                               "ping = " + CMD.ping + "</br>" +
+                                               "blah = " + CMD.blah + "</br>" +
+                                               "CMD_list = " + CMD.CMD_list + "</br>" +
+                                               "battle_close = " + CMD.battle_close + "</br>" +
+                                               "combatant_add = " + CMD.combatant_add + "</br>" +
+                                               "combatant_remove = " + CMD.combatant_remove + "</br>" +
+                                               "battle_list = " + CMD.battle_list + "</br>" +
+                                               "combatant_initiative = " + CMD.combatant_initiative + "</br>" +
+                                               "battle_sort = " + CMD.battle_sort + "</br>" +
+                                               "help = " + CMD.help + "</br>" +
+                                               "bad_command = " + CMD.bad_command);
 }
 
 // Summary: Sends appropriate output during an appropriate level of debug.
@@ -313,6 +351,9 @@ client.on("message", (message) => {
     addNewCombatant("ST", "Big_Bad", 20);
     addNewCombatant("Nadia", "@user", 11);
     DEBUG(1,true,'Sample setup completed!');
+  } else
+  if(command === 'cmd list') {
+    helpMode(-1);
   } else
   if(command === 'ping') {
     message.channel.send('Pong!');
