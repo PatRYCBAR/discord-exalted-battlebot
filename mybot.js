@@ -27,6 +27,7 @@ var initiative_list = []; // full list of people in combat
 //  - battle list
 //  - combatant initiative
 //  - battle sort
+//  - help
 var CMD_seed = 0;
 const CMD = {
   bad_command           : -1,
@@ -40,6 +41,7 @@ const CMD = {
   
   // nonsense / testing commands
   CMD_list              : ++CMD_seed,
+  sample                : ++CMD_seed,
   ping                  : ++CMD_seed,
   blah                  : ++CMD_seed
 }
@@ -124,6 +126,42 @@ function parseCommands(messagetext) {
   var command = "";
   if(args.length > 0) command = args.shift().toLowerCase();
   if(args.length > 0) command = command + " " + args.shift().toLowerCase();
+  
+  if(command === 'battle close') {
+    command = CMD.battle_close;
+  } else
+  if(command === 'combatant add') {
+    command = CMD.combatant_add;
+  } else
+  if(command === 'combatant remove') {
+    command = CMD.combatant_remove;
+  } else
+  if(command === 'battle list') {
+    command = CMD.battle_list;
+  } else
+  if(command === 'combatant initiative') {
+    command = CMD.combatant_initiative;
+  } else
+  if(command === 'battle sort') {
+    command = CMD.battle_sort;
+  } else
+  if(command === 'help') {
+    command = CMD.help;
+  } else
+  if(command === 'sample') {
+    command = CMD.sample;
+  } else
+  if(command === 'cmd list') {
+    command = CMD.CMD_list;
+  } else
+  if(command === 'ping') {
+    command = CMD.ping;
+  } else
+  if (command === 'blah') {
+    command = CMD.blah;
+  } else {
+    command = CMD.bad_command;
+  }
   
   /*for (i = 0; i < initiative_list.length; ++i){
     if(initiative_list[i] == combatantname) list_index = i;
@@ -269,17 +307,17 @@ client.on("message", (message) => {
   //  - combatant initiative remove [combatant] [number]
   //  - combatant initiative set [combatant] [number]
   //  - battle sort [number]
-  if(command === 'battle close') {
+  if(command == CMD.battle_close) {
     DEBUG(3,true,'battle closing!');
     wipeInitiative();
     DEBUG(1,true,'battle closed!');
   } else
-  if(command === 'combatant add') {
+  if(command == CMD.combatant_add) {
     DEBUG(3,true,'adding combatant!');
     addNewCombatant(args[0], args[1], parseInt(args[2]));
     DEBUG(1,true,'combatant added!');
   } else
-  if(command === 'combatant remove') {
+  if(command == CMD.combatant_remove) {
     DEBUG(1,true,'removing combatant: ' + args[0] + '!');
     
     // find the index of the character to be removed
@@ -288,7 +326,7 @@ client.on("message", (message) => {
     DEBUG(2,(removed != -1),'combatant removal SUCCESSFUL! ' + removed.combatant + ' (' + removed.user + ')');
     DEBUG(2,(removed == -1),'combatant removal FAILED!');
   } else
-  if(command === 'battle list') {
+  if(command == CMD.battle_list) {
     DEBUG(2,true,'here comes the initiative');
     if (args[0] === 'simple') {
       message.channel.send(printInitiative(false));
@@ -299,7 +337,7 @@ client.on("message", (message) => {
       message.channel.send(printInitiative(false));
     }
   } else
-  if(command === 'combatant initiative') {
+  if(command == CMD.combatant_initiative) {
     DEBUG(2,true,'changing initiative for: ' + args[1] + '!');
     
     var modified = -1;
@@ -321,7 +359,7 @@ client.on("message", (message) => {
     DEBUG(1,(modified != -1),'combatant initiative change SUCCESSFUL! ' + modified.initiative + ' : ' + modified.combatant + ' (' + modified.user + ')');
     DEBUG(1,(modified == -1),'initiative change FAILED because character was not found!');
   } else
-  if(command === 'battle sort') {
+  if(command == CMD.battle_sort) {
     DEBUG(2,true,'Sorting battle!');
     
     // Preparing first argument to be used
@@ -333,10 +371,10 @@ client.on("message", (message) => {
     sortInitiativeList(args[0]);
     DEBUG(1,true,'Battle sorted!');
   } else
-  if(command === 'help') {
+  if(command == CMD.help) {
     helpMode(1);
   } else
-  if(command === 'sample') {
+  if(command == CMD.sample) {
     DEBUG(2,true,'<b>Setting-up sample as though the following commands were run:</b>' + '</br>'
                          + '@battlebot battle close' + '</br>'
                          + '@battlebot combatant add Elwin @user 7' + '</br>'
@@ -352,16 +390,19 @@ client.on("message", (message) => {
     addNewCombatant("Nadia", "@user", 11);
     DEBUG(1,true,'Sample setup completed!');
   } else
-  if(command === 'cmd list') {
+  if(command == CMD.cmd_list) {
     helpMode(-1);
   } else
-  if(command === 'ping') {
+  if(command == CMD.ping) {
     message.channel.send('Pong!');
   } else
-  if (command === 'blah') {
+  if (command == CMD.blah) {
     message.channel.send('meh.');
-  } else {
+  } else
+  if(command == CMD.bad_command) {
     message.channel.send('Command not recognized. Try:</br>@battlebot help');
+  } else {
+    message.channel.send('ERROR!!!');
   }
 });
  
