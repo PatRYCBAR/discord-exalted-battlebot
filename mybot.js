@@ -371,13 +371,15 @@ client.on("message", (message) => {
     DEBUG(2,true,'Sorting battle!');
     
     // Preparing first argument to be used
-    if (args.length == 0) args.push("0");
-    args[0] = parseInt(args[0]);
-    if (isNaN(args[0])) args[0] = 0;
+    if ((args.length > 0)){
+      if ((args[0] === "full") || (args[0] === "all")) args[0] = "1";
+      args[0] = parseInt(args[0]);
+      if (!isNaN(args[0]) && (args[0] > 0)) {
+        sortInitiativeList(args[0] - 1);
+        DEBUG(1,true,'Battle sorted!');
+      } else DEBUG(1,true,'Error: Please specify a number to indicate where to start sorting from.  First position is 1.');
+    } else DEBUG(1,true,'Error: Please specify where to start sorting from.  First position is 1.');
     
-    // Sorting from specified position
-    sortInitiativeList(args[0]);
-    DEBUG(1,true,'Battle sorted!');
   } else
   if(command == CMD.help) {
     helpMode(1);
