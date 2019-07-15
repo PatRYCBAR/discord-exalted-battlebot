@@ -283,6 +283,14 @@ function DEBUG(atThisLevel, whenThisHappens, sayThis){
   if ((DebugLevel >= atThisLevel) && (whenThisHappens)) message.channel.send(sayThis);
 }
 
+// Summary: Checks if the value input is NaN.  Created to make code less messy
+// Input / Changes: Takes in a number that is potentially "NaN"
+// Returns: a boolean - true if it is "NaN"; false if it is anything else
+function isNaN(potentialNaN){
+  return (potentialNaN.toString() === "NaN");
+}
+  
+
 // ======================
 // Event Handlers
 // ======================
@@ -340,11 +348,11 @@ client.on("message", (message) => {
   if(command == CMD.combatant_initiative) {
     DEBUG(2,true,'changing initiative for: ' + args[1] + '!');
     
-    var modified = -1;
+    var modified = -2;
     
     // make sure that the arg was a number
     var init_change = parseInt(args[2]);
-    if (init_change.toString() != "NaN"){
+    if (!isNaN(init_change)){
       if (args[0] == "add"){
         modified = changeCombatantInitiative(args[1], 1, init_change);
       } else
@@ -356,7 +364,7 @@ client.on("message", (message) => {
       } else DEBUG(2,true,'initiative change FAILED because ' + args[0] + ' is not a valid sub-command.');
     } else DEBUG(2,true,'initiative change FAILED because ' + args[2] + ' is not a number.');
     
-    DEBUG(1,(modified != -1),'combatant initiative change SUCCESSFUL! ' + modified.initiative + ' : ' + modified.combatant + ' (' + modified.user + ')');
+    DEBUG(1,!(modified < 0),'combatant initiative change SUCCESSFUL! ' + modified.initiative + ' : ' + modified.combatant + ' (' + modified.user + ')');
     DEBUG(1,(modified == -1),'initiative change FAILED because character was not found!');
   } else
   if(command == CMD.battle_sort) {
@@ -365,7 +373,7 @@ client.on("message", (message) => {
     // Preparing first argument to be used
     if (args.length == 0) args.push("0");
     args[0] = parseInt(args[0]);
-    if (args[0].toString() == "NaN") args[0] = 0;
+    if (isNaN(args[0])) args[0] = 0;
     
     // Sorting from specified position
     sortInitiativeList(args[0]);
