@@ -134,6 +134,17 @@ function sortInitiativeList(start_index) {
   initiative_list = initiative_list.slice(0, start_index).concat(sortByInitiative(initiative_list.slice(start_index)));
 }
 
+
+// Name: copyArray(orig_array)
+// Summary: Makes a copy of an array of Strings so that the original and new one can be editted independently.
+// Input / Changes: Take in the original array.
+// Returns: An array - the new copy.
+function copyArray(orig_array) {
+  var demarker = "/*/";
+  return orig_array.join(demarker).split(demarker);
+}
+
+
 // Name: dissectMessage(messagetext)
 // Summary: Takes in message text and converts it into an object that will make it easier to analyze.
 // Input / Changes: A string form of the a message that was sent by the user
@@ -154,11 +165,11 @@ function dissectMessage(messagetext) {
   var x_first_word = "";
   var x_first_word_args = [];
   
-  if(x_orig_array.length > 0) x_first_word_args = x_orig_array.join("/*/").split("/*/");
+  if(x_orig_array.length > 0) x_first_word_args = copyArray(x_orig_array);
   if(x_first_word_args.length > 0) x_first_word = x_first_word_args.shift().toLowerCase();
   
   x_first_two_words = x_first_word + "";
-  if(x_first_word_args.length > 0) x_first_two_words_args = x_first_word_args.join("/*/").split("/*/");
+  if(x_first_word_args.length > 0) x_first_two_words_args = copyArray(x_first_word_args);
   if(x_first_two_words_args.length > 0) x_first_two_words = x_first_word + " " + x_first_two_words_args.shift().toLowerCase();
   
   DEBUG(5,true,"<b>Message dissected:</b>" + "</br>" +
@@ -196,55 +207,65 @@ function dissectMessage(messagetext) {
 //  - combatant initiative set [combatant] [number]
 //  - battle sort [number]
 function parseCommands(messagetext) {
-  var args = messagetext.slice(prefix.length).trim().split(/ +/g);
-  var command = "";
-  if(args.length > 0) command = args.shift().toLowerCase();
-  if(args.length > 0) command = command + " " + args.shift().toLowerCase();
-  
   var MSG = dissectMessage(messagetext);
+  var args = []; // messagetext.slice(prefix.length).trim().split(/ +/g);
+  var command = "";
+  // if(args.length > 0) command = args.shift().toLowerCase();
+  // if(args.length > 0) command = command + " " + args.shift().toLowerCase();
   
-  if(command === 'battle close') {
+  if(MSG.first_two_words === 'battle close') {
     command = CMD.battle_close;
+    args = copyArray(MSG.first_two_words_args);
   } else
-  if(command === 'combatant add') {
+  if(MSG.first_two_words === 'combatant add') {
     command = CMD.combatant_add;
+    args = copyArray(MSG.first_two_words_args);
   } else
-  if(command === 'combatant remove') {
+  if(MSG.first_two_words === 'combatant remove') {
     command = CMD.combatant_remove;
+    args = copyArray(MSG.first_two_words_args);
   } else
-  if(command === 'battle list') {
+  if(MSG.first_two_words === 'battle list') {
     DEBUG(4, (MSG.first_two_words === 'battle list'), "Successfully identified:" + MSG.first_two_words);
     DEBUG(4, !(MSG.first_two_words === 'battle list'), "PROBLEM WITH:" + MSG.first_two_words);
     DEBUG(4, true, "Args look like:" + MSG.first_two_words_args);
     command = CMD.battle_list;
+    args = copyArray(MSG.first_two_words_args);
   } else
-  if(command === 'combatant initiative') {
+  if(MSG.first_two_words === 'combatant initiative') {
     DEBUG(4, (MSG.first_two_words === 'combatant initiative'), "Successfully identified:" + MSG.first_two_words);
     DEBUG(4, !(MSG.first_two_words === 'combatant initiative'), "PROBLEM WITH:" + MSG.first_two_words);
     DEBUG(4, true, "Args look like:" + MSG.first_two_words_args);
     command = CMD.combatant_initiative;
+    args = copyArray(MSG.first_two_words_args);
   } else
-  if(command === 'battle sort') {
+  if(MSG.first_two_words === 'battle sort') {
     command = CMD.battle_sort;
+    args = copyArray(MSG.first_two_words_args);
   } else
-  if(command === 'help') {
+  if(MSG.first_word === 'help') {
     DEBUG(4, (MSG.first_word === 'help'), "Successfully identified:" + MSG.first_word);
     DEBUG(4, !(MSG.first_word === 'help'), "PROBLEM WITH:" + MSG.first_word);
     command = CMD.help;
+    args = copyArray(MSG.first_word_args);
   } else
-  if(command === 'sample') {
+  if(MSG.first_word === 'sample') {
     DEBUG(4, (MSG.first_word === 'sample'), "Successfully identified:" + MSG.first_word);
     DEBUG(4, !(MSG.first_word === 'sample'), "PROBLEM WITH:" + MSG.first_word);
     command = CMD.sample;
+    args = copyArray(MSG.first_word_args);
   } else
-  if(command === 'cmd list') {
+  if(MSG.first_two_words === 'cmd list') {
     command = CMD.CMD_list;
+    args = copyArray(MSG.first_two_words_args);
   } else
-  if(command === 'ping') {
+  if(MSG.first_word === 'ping') {
     command = CMD.ping;
+    args = copyArray(MSG.first_word_args);
   } else
-  if (command === 'blah') {
+  if (MSG.first_word === 'blah') {
     command = CMD.blah;
+    args = copyArray(MSG.first_word_args);
   } else {
     command = CMD.bad_command;
   }
@@ -504,7 +525,7 @@ client.on("message", (message) => {
     addNewCombatant("Nadia", "@user", 11);
     DEBUG(1,true,'Sample setup completed!');
   } else
-  if(command == CMD.cmd_list) {
+  if(command == CMD.CMD_list) {
     helpMode(-1);
   } else
   if(command == CMD.ping) {
