@@ -134,6 +134,52 @@ function sortInitiativeList(start_index) {
   initiative_list = initiative_list.slice(0, start_index).concat(sortByInitiative(initiative_list.slice(start_index)));
 }
 
+// Name: dissectMessage(messagetext)
+// Summary: Takes in message text and converts it into an object that will make it easier to analyze.
+// Input / Changes: A string form of the a message that was sent by the user
+// Returns: an object - the message broken into different pieces, which will make easier to analyze
+// Notes: Object properties:
+//  - orig_string
+//  - orig_array
+//  - first_two_words
+//  - first_two_words_args
+//  - first_word
+//  - first_word_args
+function dissectMessage(messagetext) {
+  
+  var x_orig_string = messagetext.slice(prefix.length).trim();
+  var x_orig_array = x_orig_string.split(/ +/g);
+  var x_first_two_words = "";
+  var x_first_two_words_args = [];
+  var x_first_word = "";
+  var x_first_word_args = [];
+  
+  if(x_orig_array.length > 0) x_first_word_args = x_orig_array.join("/*/").split("/*/");
+  if(x_first_word_args.length > 0) x_first_word = x_first_word_args.shift().toLowerCase();
+  
+  x_first_two_words = x_first_word + "";
+  if(x_first_word_args.length > 0) x_first_two_words_args = x_first_word_args.join("/*/").split("/*/");
+  if(x_first_two_words_args.length > 0) x_first_two_words = x_first_word + " " + x_first_two_words_args.shift().toLowerCase();
+  
+  DEBUG(2,true,"<b>Message dissected:</b>" + "</br>" +
+                    "x_orig_string = " + x_orig_string + "</br>" +
+                    "x_orig_array = " + x_orig_array + "</br>" +
+                    "x_first_two_words = " + x_first_two_words + "</br>" +
+                    "x_first_two_words_args = " + x_first_two_words_args + "</br>" +
+                    "x_first_word = " + x_first_word + "</br>" +
+                    "x_first_word_args = " + x_first_word_args + "</br>" +
+                    "");
+  
+  return {
+      orig_string           : x_orig_string,
+      orig_array            : x_orig_array,
+      first_two_words       : x_first_two_words,
+      first_two_words_args  : x_first_two_words_args,
+      first_word            : x_first_word,
+      first_word_args       : x_first_word_args
+  };
+}
+
 
 // Name: parseCommands(messagetext)
 // Summary: Translates human text / aliases into more usable commands and arguments.
@@ -155,6 +201,8 @@ function parseCommands(messagetext) {
   if(args.length > 0) command = args.shift().toLowerCase();
   if(args.length > 0) command = command + " " + args.shift().toLowerCase();
   
+  var MSG = dissectMessage(messagetext);
+  
   if(command === 'battle close') {
     command = CMD.battle_close;
   } else
@@ -165,18 +213,28 @@ function parseCommands(messagetext) {
     command = CMD.combatant_remove;
   } else
   if(command === 'battle list') {
+    DEBUG(3, (MSG.first_two_words === 'battle list'), "Successfully identified:" + MSG.first_two_words);
+    DEBUG(3, !(MSG.first_two_words === 'battle list'), "PROBLEM WITH:" + MSG.first_two_words);
+    DEBUG(3, true, "Args look like:" + MSG.first_two_words_args);
     command = CMD.battle_list;
   } else
   if(command === 'combatant initiative') {
+    DEBUG(3, (MSG.first_two_words === 'combatant initiative'), "Successfully identified:" + MSG.first_two_words);
+    DEBUG(3, !(MSG.first_two_words === 'combatant initiative'), "PROBLEM WITH:" + MSG.first_two_words);
+    DEBUG(3, true, "Args look like:" + MSG.first_two_words_args);
     command = CMD.combatant_initiative;
   } else
   if(command === 'battle sort') {
     command = CMD.battle_sort;
   } else
   if(command === 'help') {
+    DEBUG(3, (MSG.first_word === 'help'), "Successfully identified:" + MSG.first_word);
+    DEBUG(3, !(MSG.first_word === 'help'), "PROBLEM WITH:" + MSG.first_word);
     command = CMD.help;
   } else
   if(command === 'sample') {
+    DEBUG(3, (MSG.first_word === 'sample'), "Successfully identified:" + MSG.first_word);
+    DEBUG(3, !(MSG.first_word === 'sample'), "PROBLEM WITH:" + MSG.first_word);
     command = CMD.sample;
   } else
   if(command === 'cmd list') {
