@@ -7,7 +7,9 @@ client.on("ready", () => {
 });
 
 // ======================
+// ======================
 // Global Variables
+// ======================
 // ======================
 
 const prefix = "@battlebot"; // Set the prefix
@@ -47,16 +49,29 @@ const CMD = {
 }
 
 // ======================
+// ======================
 // Functions
 // ======================
+// ======================
 
-// For wiping the Initiative list at the end of battle
+
+// Name: wipeInitiative()
+// Summary: For wiping the Initiative list ("initiative_list") at the end of battle
+// Input / Changes: nothing
+// Returns: nothing
 function wipeInitiative() {
   initiative_list = [];
   return 0;
 }
 
-// Add a new combatant into the Initiative List in the last slot (sets-up the object, assuming error-checking is handled)
+
+// Name: addNewCombatant(newuser, newcombatant, newinitiative)
+// Summary: Add a new combatant into the Initiative List in the last slot (sets-up the object, assuming error-checking is handled)
+// Input / Changes: Takes in:
+//                   - a String for the user
+//                   - a String for the combatant
+//                   - a number for the combatant's starting initiative
+// Returns: a reference to the new combatant object (which has already been added to the "initiative_list"
 function addNewCombatant(newuser, newcombatant, newinitiative) {
   // creates a new object from the arguments and puts it into the initiative order at the end
   initiative_list.push({user:newuser, combatant:newcombatant, initiative:newinitiative});
@@ -68,7 +83,11 @@ function addNewCombatant(newuser, newcombatant, newinitiative) {
   return initiative_list[initiative_list.length - 1];
 }
 
-// Takes in the name of the combatant and returns the index in the Initiative List and -1 if it isn't found
+
+// Name: findCombatant(combatantname)
+// Summary: Searches "initiative_list" for a combatant, based on their name.
+// Input / Changes: Takes in a string that is the name of the combatant.  Refers to "initiative_list" directly.
+// Returns: a number -  the index in the Initiative List and -1 if it isn't found
 function findCombatant(combatantname) {
   var list_index = -1;
   var i;
@@ -84,11 +103,11 @@ function findCombatant(combatantname) {
   return list_index;
 }
 
-// WORKING ON: Sorts array of combatant objects based on Initiative values.
-// Take in an array of combatant objects.
-// Returns that same array but sorted.
-// https://www.w3schools.com/js/js_array_sort.asp (The Compare Function)
-// function(a, b){return b.initiative - a.initiative} <== goal is from highest to lowest
+
+// Name: sortByInitiative(combatantlist)
+// Summary: Sorts array of combatant objects based on Initiative values.
+// Input / Changes: Takes in an array of combatant objects.
+// Returns: Returns that same array but sorted.
 function sortByInitiative(combatantlist) {
   // function(a, b){return b.initiative - a.initiative} <== goal is from highest to lowest
   combatantlist.sort(function(a, b){return b.initiative - a.initiative});
@@ -96,22 +115,21 @@ function sortByInitiative(combatantlist) {
   return combatantlist;
 }
 
-// WORKING ON: Reorders full "initiative_list" after a specified index number based on initiative values of combatants.
-// Take in an index number.  
-// Returns nothing - directly modifies "initiative_list".
-// https://www.w3schools.com/js/js_array_methods.asp
-//  - initiative_list.slice(start_index) <== pass to reorder method
-//  - initiative_list = initiative_list.slice(0, start_index).concat(resulting_array) <== assign back to original
+
+// Name: sortInitiativeList(start_index)
+// Summary: Reorders full "initiative_list" after a specified index number based on initiative values of combatants.
+// Input / Changes: Take in a number that is the index number for initiative_list.  Direct pulls from and updates "initiative_list".
+// Returns: Nothing - directly modifies "initiative_list".
 function sortInitiativeList(start_index) {
   initiative_list = initiative_list.slice(0, start_index).concat(sortByInitiative(initiative_list.slice(start_index)));
 }
 
-// WORKING ON: Translates human text / aliases into more usable commands and arguments.
-// Take in the message and the user that sent the message.
-// Returns array of commands and arguments.
-//  - const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
-//  - const command = args.shift().toLowerCase();
-// First commands:
+
+// Name: parseCommands(messagetext)
+// Summary: Translates human text / aliases into more usable commands and arguments.
+// Input / Changes: A string form of the message that was sent by the user
+// Returns: an array - first the command ID (from CMD) and then the relevant args
+// Notes: First commands:
 //  - battle close
 //  - combatant add [user] [combatant] [number]
 //  - combatant remove [combatant]
@@ -173,6 +191,8 @@ function parseCommands(messagetext) {
   return args;
 }
 
+
+// Name: removeCombatant(combatantname)
 // Summary: Removes a combatant from the Initiative List.
 // Input / Changes: Takes in a name of a combatant to be removed.  Directly modifies "initiative_list".
 // Returns: Combatant that was removed or -1 (if not found)
@@ -191,6 +211,8 @@ function removeCombatant(combatantname){
   return output;
 }
 
+
+// Name: changeCombatantInitiative(combatantname, multInitiative, addToInitiative)
 // Summary: Modifies the Initivative value of a combatant by a multiplier then an addition / subtraction.
 // Input / Changes: Takes in:
 //                     - a name of a combatant to be modified
@@ -217,6 +239,8 @@ function changeCombatantInitiative(combatantname, multInitiative, addToInitiativ
   return output;
 }
 
+
+// Name: printInitiative(full)
 // Summary: Returns string with the full Initiative List for message display
 // Input / Changes: Takes in boolean to determine if it will be the default display or "full display".
 // Returns: formatted string of "initiative_list".
@@ -240,6 +264,8 @@ function printInitiative(full) {
   return output;
 }
 
+
+// Name: helpMode(version)
 // Summary: Initiates program to provide helpful information and stores old help version that might be useful in the future.
 // Input / Changes: Takes in the version of help desired.
 // Returns: nothing (the method takes input / sends information directly)
@@ -272,6 +298,8 @@ function helpMode(version){
                                                "bad_command = " + CMD.bad_command);
 }
 
+
+// Name: DEBUG(atThisLevel, whenThisHappens, sayThis)
 // Summary: Sends appropriate output during an appropriate level of debug.
 // Input / Changes: Takes in:
 //                         - a number that indicates the "level" of debug at which point the output would be sent
@@ -283,6 +311,8 @@ function DEBUG(atThisLevel, whenThisHappens, sayThis){
   if ((DebugLevel >= atThisLevel) && (whenThisHappens)) message.channel.send(sayThis);
 }
 
+
+// Name: isNaN(potentialNaN)
 // Summary: Checks if the value input is NaN.  Created to make code less messy
 // Input / Changes: Takes in a number that is potentially "NaN"
 // Returns: a boolean - true if it is "NaN"; false if it is anything else
@@ -292,8 +322,11 @@ function isNaN(potentialNaN){
   
 
 // ======================
+// ======================
 // Event Handlers
 // ======================
+// ======================
+
 
 // REFERED TO AS "MAIN METHOD"
 client.on("message", (message) => {
