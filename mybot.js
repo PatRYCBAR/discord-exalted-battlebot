@@ -161,7 +161,7 @@ function dissectMessage(messagetext) {
   if(x_first_word_args.length > 0) x_first_two_words_args = x_first_word_args.join("/*/").split("/*/");
   if(x_first_two_words_args.length > 0) x_first_two_words = x_first_word + " " + x_first_two_words_args.shift().toLowerCase();
   
-  DEBUG(2,true,"<b>Message dissected:</b>" + "</br>" +
+  DEBUG(5,true,"<b>Message dissected:</b>" + "</br>" +
                     "x_orig_string = " + x_orig_string + "</br>" +
                     "x_orig_array = " + x_orig_array + "</br>" +
                     "x_first_two_words = " + x_first_two_words + "</br>" +
@@ -213,28 +213,28 @@ function parseCommands(messagetext) {
     command = CMD.combatant_remove;
   } else
   if(command === 'battle list') {
-    DEBUG(3, (MSG.first_two_words === 'battle list'), "Successfully identified:" + MSG.first_two_words);
-    DEBUG(3, !(MSG.first_two_words === 'battle list'), "PROBLEM WITH:" + MSG.first_two_words);
-    DEBUG(3, true, "Args look like:" + MSG.first_two_words_args);
+    DEBUG(4, (MSG.first_two_words === 'battle list'), "Successfully identified:" + MSG.first_two_words);
+    DEBUG(4, !(MSG.first_two_words === 'battle list'), "PROBLEM WITH:" + MSG.first_two_words);
+    DEBUG(4, true, "Args look like:" + MSG.first_two_words_args);
     command = CMD.battle_list;
   } else
   if(command === 'combatant initiative') {
-    DEBUG(3, (MSG.first_two_words === 'combatant initiative'), "Successfully identified:" + MSG.first_two_words);
-    DEBUG(3, !(MSG.first_two_words === 'combatant initiative'), "PROBLEM WITH:" + MSG.first_two_words);
-    DEBUG(3, true, "Args look like:" + MSG.first_two_words_args);
+    DEBUG(4, (MSG.first_two_words === 'combatant initiative'), "Successfully identified:" + MSG.first_two_words);
+    DEBUG(4, !(MSG.first_two_words === 'combatant initiative'), "PROBLEM WITH:" + MSG.first_two_words);
+    DEBUG(4, true, "Args look like:" + MSG.first_two_words_args);
     command = CMD.combatant_initiative;
   } else
   if(command === 'battle sort') {
     command = CMD.battle_sort;
   } else
   if(command === 'help') {
-    DEBUG(3, (MSG.first_word === 'help'), "Successfully identified:" + MSG.first_word);
-    DEBUG(3, !(MSG.first_word === 'help'), "PROBLEM WITH:" + MSG.first_word);
+    DEBUG(4, (MSG.first_word === 'help'), "Successfully identified:" + MSG.first_word);
+    DEBUG(4, !(MSG.first_word === 'help'), "PROBLEM WITH:" + MSG.first_word);
     command = CMD.help;
   } else
   if(command === 'sample') {
-    DEBUG(3, (MSG.first_word === 'sample'), "Successfully identified:" + MSG.first_word);
-    DEBUG(3, !(MSG.first_word === 'sample'), "PROBLEM WITH:" + MSG.first_word);
+    DEBUG(4, (MSG.first_word === 'sample'), "Successfully identified:" + MSG.first_word);
+    DEBUG(4, !(MSG.first_word === 'sample'), "PROBLEM WITH:" + MSG.first_word);
     command = CMD.sample;
   } else
   if(command === 'cmd list') {
