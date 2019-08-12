@@ -58,11 +58,54 @@ const CMD = {
 // >
 // >>
 // >>>
-// ======================
-// ======================
-// >>>> Functions
-// ======================
-// ======================
+// =======================================
+// =======================================
+// >>>> Functions (Program-Neutral)
+// =======================================
+// =======================================
+
+
+// Name: copyArray(orig_array)
+// Summary: Makes a copy of an array of Strings so that the original and new one can be editted independently.
+// Input / Changes: Take in the original array.
+// Returns: An array - the new copy.
+function copyArray(orig_array) {
+  var demarker = "/*/";
+  return orig_array.join(demarker).split(demarker);
+}
+
+
+// Name: DEBUG(atThisLevel, whenThisHappens, sayThis)
+// Summary: Sends appropriate output during an appropriate level of debug.
+// Input / Changes: Takes in:
+//                         - a number that indicates the "level" of debug at which point the output would be sent
+//                         - a boolean value or expression to indicate when the output would be sent
+//                         - a string that would be output
+//                  Utilizes global variable that states the current variable that the program is up to
+// Returns: nothing (outputs the information to the console directly)
+function DEBUG(atThisLevel, whenThisHappens, sayThis){
+  if ((DebugLevel >= atThisLevel) && (whenThisHappens)) message.channel.send(sayThis);
+}
+
+
+// Name: isNaN(potentialNaN)
+// Summary: Checks if the value input is NaN.  Created to make code less messy
+// Input / Changes: Takes in a number that is potentially "NaN"
+// Returns: a boolean - true if it is "NaN"; false if it is anything else
+function isNaN(potentialNaN){
+  return (potentialNaN.toString() === "NaN");
+}
+
+
+
+// >
+// >>
+// >>>
+// =======================================
+// =======================================
+// >>>> Functions (Program-Dependent)
+// =======================================
+// =======================================
 
 
 // Name: wipeInitiative()
@@ -132,16 +175,6 @@ function sortByInitiative(combatantlist) {
 // Returns: Nothing - directly modifies "initiative_list".
 function sortInitiativeList(start_index) {
   initiative_list = initiative_list.slice(0, start_index).concat(sortByInitiative(initiative_list.slice(start_index)));
-}
-
-
-// Name: copyArray(orig_array)
-// Summary: Makes a copy of an array of Strings so that the original and new one can be editted independently.
-// Input / Changes: Take in the original array.
-// Returns: An array - the new copy.
-function copyArray(orig_array) {
-  var demarker = "/*/";
-  return orig_array.join(demarker).split(demarker);
 }
 
 
@@ -385,28 +418,6 @@ function helpMode(version){
                                                "battle_sort = " + CMD.battle_sort + "</br>" +
                                                "help = " + CMD.help + "</br>" +
                                                "bad_command = " + CMD.bad_command);
-}
-
-
-// Name: DEBUG(atThisLevel, whenThisHappens, sayThis)
-// Summary: Sends appropriate output during an appropriate level of debug.
-// Input / Changes: Takes in:
-//                         - a number that indicates the "level" of debug at which point the output would be sent
-//                         - a boolean value or expression to indicate when the output would be sent
-//                         - a string that would be output
-//                  Utilizes global variable that states the current variable that the program is up to
-// Returns: nothing (outputs the information to the console directly)
-function DEBUG(atThisLevel, whenThisHappens, sayThis){
-  if ((DebugLevel >= atThisLevel) && (whenThisHappens)) message.channel.send(sayThis);
-}
-
-
-// Name: isNaN(potentialNaN)
-// Summary: Checks if the value input is NaN.  Created to make code less messy
-// Input / Changes: Takes in a number that is potentially "NaN"
-// Returns: a boolean - true if it is "NaN"; false if it is anything else
-function isNaN(potentialNaN){
-  return (potentialNaN.toString() === "NaN");
 }
   
 
